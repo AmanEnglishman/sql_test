@@ -1,0 +1,32 @@
+-- Создаем таблицу закупок
+CREATE TABLE purchase (
+    id SERIAL PRIMARY KEY,
+    client_id INTEGER REFERENCES client(id),
+    amount DECIMAL(10, 2),
+    purchase_date TIMESTAMP
+);
+
+-- Пример заполнения таблицы закупок
+INSERT INTO purchase (client_id, amount, purchase_date) VALUES
+(1, 100.00, '2024-08-01'),
+(1, 150.00, '2024-08-15'),
+(2, 200.00, '2024-08-10'),
+(3, 50.00, '2024-08-05'),
+(3, 75.00, '2024-08-20'),
+(3, 120.00, '2024-08-25');
+
+-- Запрос для нахождения клиента с максимальным количеством закупок
+SELECT 
+    c.first_name,
+    c.last_name,
+    SUM(p.amount) AS total_amount
+FROM 
+    client c
+JOIN 
+    purchase p ON c.id = p.client_id
+GROUP BY 
+    c.id
+ORDER BY 
+    COUNT(p.id) DESC
+LIMIT 1;
+

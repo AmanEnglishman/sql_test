@@ -1,0 +1,7 @@
+SELECT i.name
+FROM item i
+JOIN sales s ON i.id = s.item_id
+GROUP BY i.name
+ORDER BY SUM(s.quantity) DESC
+LIMIT 1;
+

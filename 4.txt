@@ -1,0 +1,37 @@
+CREATE OR REPLACE FUNCTION get_top_products(start_date DATE, end_date DATE)
+RETURNS TABLE (
+    id INT,
+    name VARCHAR,
+    quantity INT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT p.item_id AS id, 
+           i.name, 
+           SUM(p.item_quantity) AS quantity
+    FROM purchase p
+    JOIN item i ON p.item_id = i.id
+    WHERE p.date_purchase BETWEEN start_date AND end_date
+    GROUP BY p.item_id, i.name
+    ORDER BY quantity DESC
+    LIMIT 3;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TABLE item (
+    id INT PRIMARY KEY,
+    name VARCHAR
+);
+
+INSERT INTO item (id, name) VALUES 
+(1, 'Product A'),
+(2, 'Product B'),
+(3, 'Product C'),
+(4, 'Product D'),
+(5, 'Product E');
+
+
+
+SELECT * FROM get_top_products('2021-12-01', '2022-01-01');
+

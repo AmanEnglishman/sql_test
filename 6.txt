@@ -1,0 +1,10 @@
+SELECT 
+    SUM(p.item_quantity) AS total_quantity,
+    SUM(p.item_quantity * p.item_price) AS total_spent
+FROM 
+    purchase p
+JOIN 
+    client c ON p.client_id = c.id
+WHERE 
+    c.email LIKE '%.ru';
+
